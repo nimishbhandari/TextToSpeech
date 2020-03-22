@@ -72,8 +72,8 @@ let speak = () => {
             }
         })
         // set up changes
-        speakText.SpeechSpeed = SpeechSpeed.value;
-        speakText.pitch = pitch.value;
+        // speakText.SpeechSpeed = SpeechSpeed.value;
+        // speakText.pitch = pitch.value;
 
         //speak
         synth.speak(speakText)
