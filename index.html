@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Zilla+Slab&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="main.css">
+    <title>TextToSpeech</title>
+</head>
+
+
+<body>
+    <div class="container">
+        <header class="head">Text<span class="yellow">To</span>Speech</header>
+        <div class="things">
+            <textarea name="TypeHere" id="TypeHere" cols="40" rows="auto" placeholder="Type Here......"></textarea>
+
+            <div class="ranges">
+
+                <label for="pitch">SpeechSpeed</label>
+                <!-- <div class="SpeechSpeed-value">50</div> -->
+                <input type="range" min="1" max="100" id="SpeechSpeed" value="50" class="slider" step="1"><br>
+
+                <label for="pitch">Pitch</label>
+                <!-- <div class="pitch-value">50</div> -->
+                <input type="range" min="1" max="100" id="pitch" value="50" class="slider" step="1"><br>
+
+                <label for="Amplitude">Amplitude</label>
+                <!-- <div class="Amplitude-value">50</div> -->
+                <input type="range" min="1" max="100" id="Amplitude" value="50" class="slider" step="1"><br>
+
+                <label for="Frequency">Frequency</label>
+                <!-- <div class="Frequency-value">50</div> -->
+                <input type="range" min="1" max="100" id="Frequency" value="50" class="slider" step="1"><br>
+
+            </div>
+
+
+            <select id="voiceSelect"></select><br>
+
+            <button class="speak">Speak</button>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+
+</body>
+
+</html>
