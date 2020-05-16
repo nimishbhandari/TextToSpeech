@@ -5,8 +5,104 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css?family=Zilla+Slab&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="main.css">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Serif&display=swap" rel="stylesheet">
+
     <title>TextToSpeech</title>
+
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+            /* overflow-x: hidden; */
+            overflow-y: hidden;
+        }
+
+        body {
+            background-color: #999999;
+            background: url('https://wallpaperaccess.com/full/824062.jpg') center center/cover no-repeat;
+            height: 120vh;
+        }
+
+        .container {
+            font-family: 'Zilla Slab', serif;
+            height: 90vh;
+        }
+
+        .head {
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            padding: 30px 20px;
+            font-size: 35px;
+            font-weight: 200;
+            letter-spacing: 5px;
+            width: 100%;
+        }
+
+        .yellow {
+            color: hotpink;
+        }
+
+        .things {
+            text-align: center;
+            position: relative;
+            top: 60px;
+            padding: 10px 30px;
+        }
+
+        #TypeHere {
+            width: 70vw;
+            height: 20vh;
+            border-style: solid;
+            border-width: 0px;
+            background-color: rgba(0, 0, 0, 0.804);
+            font-size: 20px;
+            padding: 20px;
+            color: #fff;
+            font-family: 'Noto Serif', serif;
+            overflow: scroll;
+        }
+
+        .ranges {
+            margin: 20px;
+            line-height: 30px;
+            color: hotpink;
+            letter-spacing: 3px;
+            font-size: 20px;
+            font-weight: 200;
+
+        }
+
+        #voiceSelect {
+            width: 80vw;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.804);
+            color: rgb(143, 57, 100);
+            border-style: none;
+            border-radius: 10px;
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        .speak {
+            padding: 10px;
+            font-size: 20px;
+            width: 30vw;
+            margin: 20px;
+            border-radius: 25px;
+            background-color: hotpink;
+            border-style: none;
+        }
+
+        .intro {
+            font-size: 15px;
+            padding: 20px;
+            letter-spacing: 0.7px;
+            color: #f4f4f4;
+            background-color: rgba(0, 0, 0, 0.804);
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 
 
@@ -14,36 +110,114 @@
     <div class="container">
         <header class="head">Text<span class="yellow">To</span>Speech</header>
         <div class="things">
-            <textarea name="TypeHere" id="TypeHere" cols="40" rows="auto" placeholder="Type Here......"></textarea>
-
-            <div class="ranges">
-
-                <label for="pitch">SpeechSpeed</label>
-                <!-- <div class="SpeechSpeed-value">50</div> -->
-                <input type="range" min="1" max="100" id="SpeechSpeed" value="50" class="slider" step="1"><br>
-
-                <label for="pitch">Pitch</label>
-                <!-- <div class="pitch-value">50</div> -->
-                <input type="range" min="1" max="100" id="pitch" value="50" class="slider" step="1"><br>
-
-                <label for="Amplitude">Amplitude</label>
-                <!-- <div class="Amplitude-value">50</div> -->
-                <input type="range" min="1" max="100" id="Amplitude" value="50" class="slider" step="1"><br>
-
-                <label for="Frequency">Frequency</label>
-                <!-- <div class="Frequency-value">50</div> -->
-                <input type="range" min="1" max="100" id="Frequency" value="50" class="slider" step="1"><br>
-
+            <div class="intro">
+                *For best results use <b> Google Chrome </b> or try this on your <b> laptops </b>.
             </div>
 
-
+            <textarea name="TypeHere" id="TypeHere" cols="40" rows="auto" placeholder="Type Here......"></textarea>
             <select id="voiceSelect"></select><br>
-
             <button class="speak">Speak</button>
         </div>
     </div>
 
-    <script src="main.js"></script>
+    <script>
+        // init speech api
+        let synth = window.speechSynthesis;
+
+        let textInput = document.querySelector('#TypeHere')
+        let voiceSelect = document.querySelector('#voiceSelect')
+        let speakOut = document.querySelector('.speak')
+
+        let pitch = document.querySelector('#pitch')
+        let pitchValue = document.querySelector('.pitch-value')
+        let SpeechSpeed = document.querySelector('#SpeechSpeed')
+        let SpeechSpeedValue = document.querySelector('.SpeechSpeed-value')
+        let Amplitude = document.querySelector('#Amplitude')
+        let AmplitudeValue = document.querySelector('.Amplitude-value')
+        let Frequency = document.querySelector('#Frenquency')
+        let FrequencyValue = document.querySelector('.Frequency-value')
+
+        //init voices 
+        let voices = []
+        let getVoices = () => {
+            voices = synth.getVoices()
+            // console.log(voices)
+
+            //looping and creating voices option for each one
+            voices.forEach(voice => {
+                //creating options
+                let option = document.createElement('option')
+
+                // filling option with voice and language
+                option.textContent = voice.name + '(' + voice.lang + ')';
+
+                //set needed option attributes
+                option.setAttribute('date-lang', voice.lang)
+                option.setAttribute('data-name', voice.name)
+                voiceSelect.appendChild(option)
+            })
+        }
+
+        getVoices();
+        if (synth.onvoiceschanged !== undefined) {
+            synth.onvoiceschanged = getVoices
+        }
+
+        //speak now
+        let speak = () => {
+            // checking if speaking
+            if (synth.speaking) {
+                console.err('In working...');
+                return;
+            }
+
+            if (textInput.value !== '') {
+                //get speak text
+                let speakText = new SpeechSynthesisUtterance(textInput.value)
+
+                //speak end
+                speakText.onend = e => {
+                    console.log('process completed... ')
+                }
+
+                //speak error
+                speakText.onerror = e => {
+                    console.error('something went wrong.....')
+                }
+
+                // selected voice 
+                let selectedVoice = voiceSelect.selectedOptions[0].getAttribute('data-name')
+
+                //loop through voices
+                voices.forEach(voice => {
+                    if (voice.name === selectedVoice) {
+                        speakText.voice = voice
+                    }
+                })
+                // set up changes
+                // speakText.SpeechSpeed = SpeechSpeed.value;
+                // speakText.pitch = pitch.value;
+
+                //speak
+                synth.speak(speakText)
+            }
+        }
+
+        speakOut.addEventListener('click', e => {
+            e.preventDefault()
+            speak()
+            textInput.blur()
+        })
+
+        // Rate value change
+        // SpeechSpeed.addEventListener('change', e => (SpeechSpeedValue.textContent = SpeechSpeed.value));
+
+        // Pitch value change
+        // pitch.addEventListener('change', e => (pitchValue.textContent = pitch.value));
+
+        //speak when the language is changed
+        voiceSelect.addEventListener('change', e => speak())
+    </script>
 
 </body>
 
